@@ -1,0 +1,34 @@
+package com.accenture.projectPizzeria.controller;
+
+import com.accenture.projectPizzeria.controller.api.CustomerApi;
+import com.accenture.projectPizzeria.service.CustomerService;
+import com.accenture.projectPizzeria.service.dto.CustomerRequestDto;
+import com.accenture.projectPizzeria.service.dto.CustomerResponseDto;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+
+@Slf4j
+@RestController
+@AllArgsConstructor
+public class CustomerController implements CustomerApi {
+
+    CustomerService customerService;
+
+    @Override
+    public ResponseEntity<Void> addCustomer(@Valid CustomerRequestDto requestDto) {
+        log.info("Accessing endpoint POST /customers/{id}");
+        CustomerResponseDto reponseDto = customerService.addCustomer(requestDto);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(reponseDto.id())
+                .toUri();
+        return ResponseEntity.created(location).build();
+    }
+}
