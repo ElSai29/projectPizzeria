@@ -10,9 +10,14 @@ import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestRestTemplate
@@ -30,6 +35,10 @@ class IngredientControllerEndToEndTest {
 
     @Autowired
     private IngredientServiceImpl ingredientService;
+
+    @BeforeEach
+    @Sql(statements = {"DELETE FROM INGREDIENTS"})
+    public void setUp() {}
 
     @Test
     @Order(1)
@@ -50,6 +59,24 @@ class IngredientControllerEndToEndTest {
             Assertions.assertNotNull(ingredientResponseDto.id(), "Ingredient return must not have a null UUID.");
             Assertions.assertEquals(ingredientName, ingredientResponseDto.ingredientName(), "Ingredient name must match the request ingredient name.");
             Assertions.assertEquals(stock, ingredientResponseDto.stock(), "Ingredient stock must match the request ingredient stock.");
+        });
+
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Test the find all through Get endpoint")
+    @Sql("/scripts/ingredients_injection.sql")
+    void testGetAllIngredientsSuccess() {
+
+        ResponseEntity<List<IngredientResponseDto>> responseIngredients = restTemplate.exchange("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+        List<IngredientResponseDto> ingredients = responseIngredients.getBody();
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(HttpStatus.OK, responseIngredients.getStatusCode());
+            Assertions.assertNotNull(responseIngredients.getBody());
+            Assertions.assertEquals("Tomato", ingredients.getFirst().ingredientName());
+            Assertions.assertEquals(100, ingredients.getFirst().stock());
         });
 
     }

@@ -38,7 +38,7 @@ public class IngredientControllerIntegrationTest {
     private IngredientMapper ingredientMapper;
 
     @Test
-    @DisplayName("Test to persist ingredient in to H2 database")
+    @DisplayName("Test to persist ingredient into H2 database")
     void testPersistIngredientSuccess() throws Exception {
 
         String ingredientName = "Tomato";
@@ -54,6 +54,15 @@ public class IngredientControllerIntegrationTest {
                     .characterEncoding(StandardCharsets.UTF_8)
                     .content(objectMapper.writeValueAsString(jsonBody)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
+
+    }
+
+    @Test
+    @DisplayName("Test to get all the ingredients persisted in the H2 database")
+    void testGetAllIngredientsSuccess() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get(API_INGREDIENTS_ENDPOINT))
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
 

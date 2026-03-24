@@ -15,6 +15,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.support.MessageSourceAccessor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
@@ -69,6 +71,47 @@ public class IngredientServiceImplTest {
                 () -> Assertions.assertNotNull(returnedIngredient.stock(), "Ingredient stock should not be null"),
                 () -> Assertions.assertEquals(ingredientName, returnedIngredient.ingredientName(), "Ingredient name should be the same as expected"),
                 () -> Assertions.assertEquals(stock, returnedIngredient.stock(), "Ingredient stock should be the same as expected"));
+
+    }
+
+    @Test
+    @DisplayName("Test getting all the ingredients persisted in the H2 database")
+    void getAllIngredientsOk() {
+
+        IngredientService spy = Mockito.spy(ingredientService);
+
+        UUID idTomato = UUID.randomUUID();
+        String ingredientNameTomato = "Tomato";
+        int stockTomato = 100;
+
+        IngredientResponseDto responseDtoTomato = new IngredientResponseDto(idTomato, ingredientNameTomato, stockTomato);
+        Ingredient ingredientEntityTomato = new Ingredient(ingredientNameTomato, stockTomato);
+
+        UUID idBasil = UUID.randomUUID();
+        String ingredientNameBasil = "Basil";
+        int stockBasil = 100;
+
+        IngredientResponseDto responseDtoBasil = new IngredientResponseDto(idBasil, ingredientNameBasil, stockBasil);
+        Ingredient ingredientEntityBasil = new Ingredient(ingredientNameBasil, stockBasil);
+
+        List<Ingredient> listIngredients =  new ArrayList<>();
+        listIngredients.add(ingredientEntityTomato);
+        listIngredients.add(ingredientEntityBasil);
+
+        Mockito.when(ingredientDao.findAll()).thenReturn(listIngredients);
+        Mockito.when(ingredientMapper.toIngredientResponseDto(ingredientEntityTomato)).thenReturn(responseDtoTomato);
+        Mockito.when(ingredientMapper.toIngredientResponseDto(ingredientEntityBasil)).thenReturn(responseDtoBasil);
+
+        List<IngredientResponseDto> returnedIngredients = spy.getAllIngredients();
+
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(idTomato, returnedIngredients.getFirst().id(), "Tomato id should match the expected."),
+                () -> Assertions.assertEquals(idBasil, returnedIngredients.getLast().id(), "Basil id should match the expected."),
+                () -> Assertions.assertEquals(ingredientNameTomato, returnedIngredients.getFirst().ingredientName(), "Tomato name should match the expected."),
+                () -> Assertions.assertEquals(ingredientNameBasil, returnedIngredients.getLast().ingredientName(), "Basil name should match the expected."),
+                () -> Assertions.assertEquals(stockTomato, returnedIngredients.getFirst().stock(), "Tomato stock should match the expected."),
+                () -> Assertions.assertEquals(stockBasil, returnedIngredients.getLast().stock(), "Basil stock should match the expected.")
+        );
 
     }
 

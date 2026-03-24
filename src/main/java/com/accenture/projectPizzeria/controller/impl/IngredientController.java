@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -32,5 +33,13 @@ public class IngredientController implements IngredientApi {
                 .toUri();
         return ResponseEntity.created(location).build();
 
+    }
+
+    @Override
+    public ResponseEntity<List<IngredientResponseDto>> getAllIngredients() {
+
+        log.info("Accessing endpoint GET /ingredients");
+
+        return ResponseEntity.ok(ingredientService.getAllIngredients());
     }
 }

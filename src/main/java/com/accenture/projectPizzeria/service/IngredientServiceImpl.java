@@ -39,6 +39,14 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
+    public List<IngredientResponseDto> getAllIngredients() {
+        List<Ingredient> savedIngredients = ingredientDao.findAll();
+        return savedIngredients.stream()
+                .map(ingredientMapper::toIngredientResponseDto)
+                .toList();
+    }
+
+    @Override
     public void verifyIngredient(IngredientRequestDto ingredientRequestDto) {
         if(ingredientRequestDto == null)
             throw new IngredientException(messages.getMessage("ingredient.null"));

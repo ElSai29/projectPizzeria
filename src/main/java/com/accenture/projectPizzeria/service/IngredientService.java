@@ -9,6 +9,7 @@ import java.util.List;
 public interface IngredientService {
 
     IngredientResponseDto addIngredient(IngredientRequestDto ingredientRequestDto);
+    List<IngredientResponseDto> getAllIngredients();
 
     void verifyIngredient(IngredientRequestDto ingredientRequestDto);
 }
