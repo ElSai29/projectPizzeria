@@ -3,7 +3,6 @@ package com.accenture.projectPizzeria.repository.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,7 +10,6 @@ import java.util.UUID;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class Customer {
 
     @Id
@@ -24,6 +22,9 @@ public class Customer {
     @OneToMany
     @JoinColumn
     private List<Order> previousOrder;
+
+    public Customer() {
+    }
 
     public Customer(String name, String email, boolean isVip, List<Order> previousOrder) {
         this.name = name;
