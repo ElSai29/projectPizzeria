@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -77,6 +78,29 @@ class IngredientControllerEndToEndTest {
             Assertions.assertNotNull(responseIngredients.getBody());
             Assertions.assertEquals("Tomato", ingredients.getFirst().ingredientName());
             Assertions.assertEquals(100, ingredients.getFirst().stock());
+        });
+
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Test the find by name through Get endpoint")
+    @Sql("/scripts/ingredients_injection.sql")
+    void testGetIngredientByNameSuccess() {
+
+        String name = "Tomato";
+
+        String url = UriComponentsBuilder
+                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS)
+                .queryParam("ingredient_name", name)
+                .toUriString();
+
+        ResponseEntity<IngredientResponseDto> responseIngredients = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<>(){});
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(HttpStatus.OK, responseIngredients.getStatusCode());
+            Assertions.assertNotNull(responseIngredients.getBody());
+            Assertions.assertEquals("Tomato", responseIngredients.getBody().ingredientName());
         });
 
     }

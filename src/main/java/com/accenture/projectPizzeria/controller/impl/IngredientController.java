@@ -42,4 +42,9 @@ public class IngredientController implements IngredientApi {
 
         return ResponseEntity.ok(ingredientService.getAllIngredients());
     }
+
+    @Override
+    public ResponseEntity<IngredientResponseDto> getIngredient(String ingredientName) {
+        return ResponseEntity.ok(ingredientService.findIngredientByName(ingredientName));
+    }
 }

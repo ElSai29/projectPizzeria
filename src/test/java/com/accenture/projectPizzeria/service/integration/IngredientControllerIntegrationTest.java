@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tools.jackson.databind.ObjectMapper;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -62,6 +63,17 @@ public class IngredientControllerIntegrationTest {
     void testGetAllIngredientsSuccess() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get(API_INGREDIENTS_ENDPOINT))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
+    @Test
+    @DisplayName("Test to get an ingredient by its name from the H2 database")
+    void testGetIngredientByNameSuccess() throws Exception {
+
+        String name = "Tomato";
+        mockMvc.perform(MockMvcRequestBuilders.get(API_INGREDIENTS_ENDPOINT + "/{name}",name)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
