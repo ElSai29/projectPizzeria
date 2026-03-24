@@ -7,5 +7,5 @@ public interface CustomerService {
 
     CustomerResponseDto addCustomer(CustomerRequestDto customerRequestDto);
 
-
+    void verify(CustomerRequestDto requestDto);
 }
