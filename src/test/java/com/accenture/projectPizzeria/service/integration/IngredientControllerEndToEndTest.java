@@ -91,11 +91,11 @@ class IngredientControllerEndToEndTest {
         String name = "Tomato";
 
         String url = UriComponentsBuilder
-                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS)
+                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS + "/")
                 .queryParam("ingredient_name", name)
                 .toUriString();
 
-        ResponseEntity<IngredientResponseDto> responseIngredients = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<>(){});
+        ResponseEntity<IngredientResponseDto> responseIngredients = restTemplate.exchange(url, HttpMethod.GET, null, IngredientResponseDto.class);
 
         Assertions.assertAll(() -> {
             Assertions.assertEquals(HttpStatus.OK, responseIngredients.getStatusCode());
