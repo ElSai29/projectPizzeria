@@ -69,6 +69,23 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
+    public IngredientResponseDto updateIngredientStock(UUID id, Integer stock) {
+
+        Ingredient ingredient = null;
+
+        try {
+            ingredient = ingredientDao.getReferenceById(id);
+        } catch (EntityNotFoundException _) {
+            throw new EntityNotFoundException(messages.getMessage("ingredient.not.found"));
+        }
+
+        ingredient.setStock(stock);
+        Ingredient savedIngredient = ingredientDao.save(ingredient);
+
+        return ingredientMapper.toIngredientResponseDto(savedIngredient);
+    }
+
+    @Override
     public void verifyIngredient(IngredientRequestDto ingredientRequestDto) {
         if(ingredientRequestDto == null)
             throw new IngredientException(messages.getMessage("ingredient.null"));

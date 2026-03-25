@@ -16,8 +16,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.support.MessageSourceAccessor;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
@@ -220,6 +222,39 @@ public class IngredientServiceImplTest {
         catch (EntityNotFoundException e){
             Assertions.assertNotNull(e);
         }
+
+    }
+
+    @Test
+    @DisplayName("Test the method updateIngredientStock from service with valid input")
+    void updateIngredientStockFromServiceSuccess() {
+
+        IngredientService spy = Mockito.spy(ingredientService);
+
+        UUID idTomato = UUID.randomUUID();
+        String ingredientName = "Tomato";
+        int stockTomato = 100;
+        int newStock = 50;
+
+        Ingredient originalIngredient = new Ingredient(ingredientName, stockTomato);
+        originalIngredient.setId(idTomato);
+
+        Mockito.when(ingredientDao.getReferenceById((Mockito.any(UUID.class)))).thenReturn(originalIngredient);
+
+        IngredientResponseDto expectedResponse = new IngredientResponseDto(idTomato, ingredientName, newStock);
+
+        Mockito.when(ingredientDao.save(Mockito.any(Ingredient.class))).thenReturn(originalIngredient);
+        Mockito.when(ingredientMapper.toIngredientResponseDto(Mockito.any(Ingredient.class))).thenReturn(expectedResponse);
+
+        IngredientResponseDto returnedResponse = spy.updateIngredientStock(idTomato, stockTomato);
+
+        Assertions.assertAll(()-> Assertions.assertNotNull(returnedResponse, "DtoResponse should not be null."),
+                () -> Assertions.assertNotNull(returnedResponse.id(), "Id should not be null."),
+                () -> Assertions.assertNotNull(returnedResponse.ingredientName(), "Ingredient name should not be null."),
+                () -> Assertions.assertNotNull(returnedResponse.stock(), "Ingredient stock should not be null."),
+                () -> Assertions.assertEquals(idTomato, returnedResponse.id(), "DtoResponse id should match the expected."),
+                () -> Assertions.assertEquals(ingredientName, returnedResponse.ingredientName(), "DtoResponse name should match the expected."),
+                () -> Assertions.assertEquals(newStock, returnedResponse.stock(), "DtoResponse stock should match the expected."));
 
     }
 

@@ -11,9 +11,8 @@ import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRe
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -125,6 +124,35 @@ class IngredientControllerEndToEndTest {
             Assertions.assertEquals(HttpStatus.OK, responseIngredients.getStatusCode());
             Assertions.assertNotNull(responseIngredients.getBody());
             Assertions.assertEquals("996e267f-8512-4089-b539-e75729d984b0", responseIngredients.getBody().id().toString());
+        });
+
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Test the patch of an ingredient through Patch endpoint")
+    @Sql("/scripts/ingredients_injection.sql")
+    void testPatchIngredientSuccess() {
+
+        UUID id = UUID.fromString("996e267f-8512-4089-b539-e75729d984b0");
+        Integer newStock = 50;
+
+        String url = UriComponentsBuilder
+                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS + "/patch/{id}")
+                .buildAndExpand(id)
+                .toUriString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Integer> request = new HttpEntity<>(newStock, headers);
+        ResponseEntity<IngredientResponseDto> response = restTemplate.exchange(url, HttpMethod.PATCH, request, IngredientResponseDto.class);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+            Assertions.assertNotNull(response.getBody());
+            Assertions.assertEquals(50, response.getBody().stock());
         });
 
     }
