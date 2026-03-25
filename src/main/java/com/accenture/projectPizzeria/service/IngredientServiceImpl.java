@@ -49,7 +49,7 @@ public class IngredientServiceImpl implements IngredientService {
     public IngredientResponseDto findIngredientByName(String name) {
         Ingredient ingredient = null;
         try {
-            ingredient = ingredientDao.findByIngredientName(name.toUpperCase());
+            ingredient = ingredientDao.findByIngredientName(name);
         } catch (EntityNotFoundException _) {
             throw new EntityNotFoundException(messages.getMessage("ingredient.not.found"));
         }

@@ -91,8 +91,8 @@ class IngredientControllerEndToEndTest {
         String name = "Tomato";
 
         String url = UriComponentsBuilder
-                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS + "/")
-                .queryParam("ingredient_name", name)
+                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS + "/{name}")
+                .buildAndExpand(name)
                 .toUriString();
 
         ResponseEntity<IngredientResponseDto> responseIngredients = restTemplate.exchange(url, HttpMethod.GET, null, IngredientResponseDto.class);
