@@ -6,8 +6,7 @@ import com.accenture.projectPizzeria.repository.IngredientDao;
 import com.accenture.projectPizzeria.repository.model.Ingredient;
 import com.accenture.projectPizzeria.service.dto.IngredientRequestDto;
 import com.accenture.projectPizzeria.service.dto.IngredientResponseDto;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +35,25 @@ public class IngredientServiceImpl implements IngredientService {
         Ingredient savedIngredient = ingredientDao.save(ingredientMapper.toIngredient(ingredientRequestDto));
         return ingredientMapper.toIngredientResponseDto(savedIngredient);
 
+    }
+
+    @Override
+    public List<IngredientResponseDto> getAllIngredients() {
+        List<Ingredient> savedIngredients = ingredientDao.findAll();
+        return savedIngredients.stream()
+                .map(ingredientMapper::toIngredientResponseDto)
+                .toList();
+    }
+
+    @Override
+    public IngredientResponseDto findIngredientByName(String name) {
+        Ingredient ingredient = null;
+        try {
+            ingredient = ingredientDao.findByIngredientName(name);
+        } catch (EntityNotFoundException _) {
+            throw new EntityNotFoundException(messages.getMessage("ingredient.not.found"));
+        }
+        return ingredientMapper.toIngredientResponseDto(ingredient);
     }
 
     @Override

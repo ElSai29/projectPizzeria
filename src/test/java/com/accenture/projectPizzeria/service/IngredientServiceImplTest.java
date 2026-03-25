@@ -5,6 +5,7 @@ import com.accenture.projectPizzeria.repository.IngredientDao;
 import com.accenture.projectPizzeria.repository.model.Ingredient;
 import com.accenture.projectPizzeria.service.dto.IngredientRequestDto;
 import com.accenture.projectPizzeria.service.dto.IngredientResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +16,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.support.MessageSourceAccessor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
@@ -69,6 +72,100 @@ public class IngredientServiceImplTest {
                 () -> Assertions.assertNotNull(returnedIngredient.stock(), "Ingredient stock should not be null"),
                 () -> Assertions.assertEquals(ingredientName, returnedIngredient.ingredientName(), "Ingredient name should be the same as expected"),
                 () -> Assertions.assertEquals(stock, returnedIngredient.stock(), "Ingredient stock should be the same as expected"));
+
+    }
+
+    @Test
+    @DisplayName("Test getting all the ingredients persisted in the H2 database")
+    void getAllIngredientsOk() {
+
+        IngredientService spy = Mockito.spy(ingredientService);
+
+        UUID idTomato = UUID.randomUUID();
+        String ingredientNameTomato = "Tomato";
+        int stockTomato = 100;
+
+        IngredientResponseDto responseDtoTomato = new IngredientResponseDto(idTomato, ingredientNameTomato, stockTomato);
+        Ingredient ingredientEntityTomato = new Ingredient(ingredientNameTomato, stockTomato);
+
+        UUID idBasil = UUID.randomUUID();
+        String ingredientNameBasil = "Basil";
+        int stockBasil = 100;
+
+        IngredientResponseDto responseDtoBasil = new IngredientResponseDto(idBasil, ingredientNameBasil, stockBasil);
+        Ingredient ingredientEntityBasil = new Ingredient(ingredientNameBasil, stockBasil);
+
+        List<Ingredient> listIngredients =  new ArrayList<>();
+        listIngredients.add(ingredientEntityTomato);
+        listIngredients.add(ingredientEntityBasil);
+
+        Mockito.when(ingredientDao.findAll()).thenReturn(listIngredients);
+        Mockito.when(ingredientMapper.toIngredientResponseDto(ingredientEntityTomato)).thenReturn(responseDtoTomato);
+        Mockito.when(ingredientMapper.toIngredientResponseDto(ingredientEntityBasil)).thenReturn(responseDtoBasil);
+
+        List<IngredientResponseDto> returnedIngredients = spy.getAllIngredients();
+
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(idTomato, returnedIngredients.getFirst().id(), "Tomato id should match the expected."),
+                () -> Assertions.assertEquals(idBasil, returnedIngredients.getLast().id(), "Basil id should match the expected."),
+                () -> Assertions.assertEquals(ingredientNameTomato, returnedIngredients.getFirst().ingredientName(), "Tomato name should match the expected."),
+                () -> Assertions.assertEquals(ingredientNameBasil, returnedIngredients.getLast().ingredientName(), "Basil name should match the expected."),
+                () -> Assertions.assertEquals(stockTomato, returnedIngredients.getFirst().stock(), "Tomato stock should match the expected."),
+                () -> Assertions.assertEquals(stockBasil, returnedIngredients.getLast().stock(), "Basil stock should match the expected.")
+        );
+
+    }
+
+    @Test
+    @DisplayName("Test the methode findByName() from service, must return the correct output")
+    void findByNameSuccess() {
+
+        IngredientService spy = Mockito.spy(ingredientService);
+
+        UUID idTomato = UUID.randomUUID();
+        String ingredientName = "Tomato";
+        int stockTomato = 100;
+
+        Ingredient originalIngredient = new Ingredient(ingredientName, stockTomato);
+        IngredientResponseDto expectedResponse = new IngredientResponseDto(idTomato, ingredientName, stockTomato);
+
+        Mockito.when(ingredientDao.findByIngredientName((Mockito.any(String.class)))).thenReturn(originalIngredient);
+        Mockito.when(ingredientMapper.toIngredientResponseDto(Mockito.any(Ingredient.class))).thenReturn(expectedResponse);
+
+        IngredientResponseDto returnedResponse = spy.findIngredientByName(ingredientName);
+
+        Assertions.assertAll(()-> Assertions.assertNotNull(returnedResponse, "DtoResponse should not be null."),
+                () -> Assertions.assertNotNull(returnedResponse.id(), "Id should not be null."),
+                () -> Assertions.assertNotNull(returnedResponse.ingredientName(), "Ingredient name should not be null."),
+                () -> Assertions.assertNotNull(returnedResponse.stock(), "Ingredient stock should not be null."),
+                () -> Assertions.assertEquals(idTomato, returnedResponse.id(), "DtoResponse id should match the expected."),
+                () -> Assertions.assertEquals(ingredientName, returnedResponse.ingredientName(), "DtoResponse name should match the expected."),
+                () -> Assertions.assertEquals(stockTomato, returnedResponse.stock(), "DtoResponse stock should match the expected."));
+
+    }
+
+    @Test
+    @DisplayName("Test the method findByName() from service, must throw EntityNotFoundException with invalid input")
+    void findByNameInvalidTestThrown() {
+
+        Mockito.when(ingredientDao.findByIngredientName((Mockito.any(String.class)))).thenThrow(EntityNotFoundException.class);
+        String name = "mushroom";
+        Assertions.assertThrows(EntityNotFoundException.class, () -> ingredientService.findIngredientByName(name));
+
+    }
+
+    @Test
+    @DisplayName("Test the method findByName from service, must catch EntityNotFoundException with message in the Exception object")
+    void findByNameInvalidTestCatch() {
+
+        Mockito.when(ingredientDao.findByIngredientName((Mockito.any(String.class)))).thenThrow(EntityNotFoundException.class);
+        String name = "mushroom";
+        try{
+            ingredientService.findIngredientByName(name);
+        }
+        catch (EntityNotFoundException e){
+            Assertions.assertNotNull(e);
+        }
 
     }
 
