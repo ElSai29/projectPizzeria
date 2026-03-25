@@ -16,7 +16,7 @@ public interface IngredientService {
     IngredientResponseDto findIngredientByName(String name);
     IngredientResponseDto findIngredientById(UUID id);
 
-    IngredientResponseDto updateIngredientStock(UUID id, Integer stock);
+    IngredientResponseDto updateIngredientStock(String name, Integer stock);
 
     void verifyIngredient(IngredientRequestDto ingredientRequestDto);
 }

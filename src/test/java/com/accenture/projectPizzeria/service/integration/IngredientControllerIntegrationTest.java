@@ -95,7 +95,7 @@ class IngredientControllerIntegrationTest {
 
         UUID idTomato = UUID.randomUUID();
         int stock = 50;
-        mockMvc.perform(MockMvcRequestBuilders.patch(API_INGREDIENTS_ENDPOINT + "/patch/{id}",idTomato)
+        mockMvc.perform(MockMvcRequestBuilders.patch(API_INGREDIENTS_ENDPOINT + "/patch/{name}",idTomato)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(stock)))

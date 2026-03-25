@@ -246,7 +246,7 @@ public class IngredientServiceImplTest {
         Mockito.when(ingredientDao.save(Mockito.any(Ingredient.class))).thenReturn(originalIngredient);
         Mockito.when(ingredientMapper.toIngredientResponseDto(Mockito.any(Ingredient.class))).thenReturn(expectedResponse);
 
-        IngredientResponseDto returnedResponse = spy.updateIngredientStock(idTomato, stockTomato);
+        IngredientResponseDto returnedResponse = spy.updateIngredientStock(ingredientName, stockTomato);
 
         Assertions.assertAll(()-> Assertions.assertNotNull(returnedResponse, "DtoResponse should not be null."),
                 () -> Assertions.assertNotNull(returnedResponse.id(), "Id should not be null."),

@@ -134,12 +134,12 @@ class IngredientControllerEndToEndTest {
     @Sql("/scripts/ingredients_injection.sql")
     void testPatchIngredientSuccess() {
 
-        UUID id = UUID.fromString("996e267f-8512-4089-b539-e75729d984b0");
+        String name = "Tomato";
         Integer newStock = 50;
 
         String url = UriComponentsBuilder
-                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS + "/patch/{id}")
-                .buildAndExpand(id)
+                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS + "/patch/{name}")
+                .buildAndExpand(name)
                 .toUriString();
 
         HttpHeaders headers = new HttpHeaders();

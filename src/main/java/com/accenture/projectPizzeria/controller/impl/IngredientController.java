@@ -46,17 +46,22 @@ public class IngredientController implements IngredientApi {
 
     @Override
     public ResponseEntity<IngredientResponseDto> getIngredient(String ingredientName) {
+
+        log.info("Accessing endpoint GET /ingredients/{name}");
         return ResponseEntity.ok(ingredientService.findIngredientByName(ingredientName));
     }
 
     @Override
     public ResponseEntity<IngredientResponseDto> getIngredientById(UUID id) {
+        log.info("Accessing endpoint GET /ingredients/findById/{name}");
         return ResponseEntity.ok(ingredientService.findIngredientById(id));
     }
 
     @Override
-    public ResponseEntity<IngredientResponseDto> updateIngredientStock(UUID id, Integer stock) {
-        IngredientResponseDto ingredientResponseDto = ingredientService.updateIngredientStock(id, stock);
+    public ResponseEntity<IngredientResponseDto> updateIngredientStock(String name, Integer stock) {
+
+        log.info("Accessing endpoint PATCH /ingredients/patch/{name}");
+        IngredientResponseDto ingredientResponseDto = ingredientService.updateIngredientStock(name, stock);
         return ResponseEntity.ok(ingredientResponseDto);
     }
 }
