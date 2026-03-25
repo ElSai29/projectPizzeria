@@ -1,6 +1,5 @@
-package com.accenture.projectPizzeria.service.integration;
+package com.accenture.projectPizzeria.controller.ingredient;
 
-import com.accenture.projectPizzeria.mapper.IngredientMapper;
 import com.accenture.projectPizzeria.service.IngredientServiceImpl;
 import com.accenture.projectPizzeria.service.dto.IngredientRequestDto;
 import com.accenture.projectPizzeria.service.dto.IngredientResponseDto;

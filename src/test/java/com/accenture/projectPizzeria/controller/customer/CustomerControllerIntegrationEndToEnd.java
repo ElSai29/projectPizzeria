@@ -1,4 +1,4 @@
-package com.accenture.projectPizzeria.service.controller;
+package com.accenture.projectPizzeria.controller.customer;
 
 import com.accenture.projectPizzeria.service.CustomerServiceImpl;
 import com.accenture.projectPizzeria.service.dto.CustomerRequestDto;

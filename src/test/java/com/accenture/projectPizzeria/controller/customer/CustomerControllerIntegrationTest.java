@@ -1,6 +1,6 @@
-package com.accenture.projectPizzeria.service.controller;
+package com.accenture.projectPizzeria.controller.customer;
 
-import com.accenture.projectPizzeria.controller.CustomerController;
+import com.accenture.projectPizzeria.controller.impl.CustomerController;
 import com.accenture.projectPizzeria.mapper.CustomerMapper;
 import com.accenture.projectPizzeria.service.CustomerServiceImpl;
 import com.accenture.projectPizzeria.service.dto.CustomerRequestDto;

@@ -34,4 +34,9 @@ public class Pizza {
 
     private HashMap<PizzaSize, Double> prices;
 
+    public Pizza(String name, List<Ingredient> ingredients, HashMap<PizzaSize, Double> prices) {
+        this.name = name;
+        this.ingredients = ingredients;
+        this.prices = prices;
+    }
 }
