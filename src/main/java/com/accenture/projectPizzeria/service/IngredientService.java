@@ -11,9 +11,12 @@ import java.util.UUID;
 public interface IngredientService {
 
     IngredientResponseDto addIngredient(IngredientRequestDto ingredientRequestDto);
+
     List<IngredientResponseDto> getAllIngredients();
     IngredientResponseDto findIngredientByName(String name);
     IngredientResponseDto findIngredientById(UUID id);
+
+    IngredientResponseDto updateIngredientStock(UUID id, Integer stock);
 
     void verifyIngredient(IngredientRequestDto ingredientRequestDto);
 }

@@ -16,13 +16,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tools.jackson.databind.ObjectMapper;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @WebMvcTest(IngredientController.class)
-public class IngredientControllerIntegrationTest {
+class IngredientControllerIntegrationTest {
 
     private static final String API_INGREDIENTS_ENDPOINT = "/ingredients";
 
@@ -87,6 +87,19 @@ public class IngredientControllerIntegrationTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
+    }
+
+    @Test
+    @DisplayName("Test to patch an ingredient")
+    void testPatchIngredientSuccess() throws Exception {
+
+        UUID idTomato = UUID.randomUUID();
+        int stock = 50;
+        mockMvc.perform(MockMvcRequestBuilders.patch(API_INGREDIENTS_ENDPOINT + "/patch/{id}",idTomato)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(stock)))
+                .andExpect(status().isOk());
     }
 
 }

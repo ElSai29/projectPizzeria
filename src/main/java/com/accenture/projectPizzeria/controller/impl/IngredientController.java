@@ -53,4 +53,10 @@ public class IngredientController implements IngredientApi {
     public ResponseEntity<IngredientResponseDto> getIngredientById(UUID id) {
         return ResponseEntity.ok(ingredientService.findIngredientById(id));
     }
+
+    @Override
+    public ResponseEntity<IngredientResponseDto> updateIngredientStock(UUID id, Integer stock) {
+        IngredientResponseDto ingredientResponseDto = ingredientService.updateIngredientStock(id, stock);
+        return ResponseEntity.ok(ingredientResponseDto);
+    }
 }
