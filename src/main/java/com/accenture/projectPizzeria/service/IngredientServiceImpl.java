@@ -69,13 +69,14 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientResponseDto updateIngredientStock(UUID id, Integer stock) {
+    public IngredientResponseDto updateIngredientStock(String name, Integer stock) {
 
         Ingredient ingredient = null;
 
-        try {
-            ingredient = ingredientDao.getReferenceById(id);
-        } catch (EntityNotFoundException _) {
+        try{
+            ingredient = ingredientDao.findByIngredientName(name);
+        }
+        catch (EntityNotFoundException _){
             throw new EntityNotFoundException(messages.getMessage("ingredient.not.found"));
         }
 

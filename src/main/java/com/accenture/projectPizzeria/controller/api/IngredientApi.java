@@ -50,7 +50,7 @@ public interface IngredientApi {
     @ApiResponse(responseCode = "200", description = "Ingredient partially modified")
     @ApiResponse(responseCode = "404", description = "Ingredient not found",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
-    @PatchMapping("/patch/{id}")
-    ResponseEntity<IngredientResponseDto> updateIngredientStock(@Parameter(description = "Ingredient id not found", required = true) @PathVariable("id") UUID id, @RequestBody Integer stock);
+    @PatchMapping("/patch/{name}")
+    ResponseEntity<IngredientResponseDto> updateIngredientStock(@Parameter(description = "Ingredient id not found", required = true) @PathVariable("name") String name, @RequestBody Integer stock);
 
 }
