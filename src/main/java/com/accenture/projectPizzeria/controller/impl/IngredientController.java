@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
@@ -46,5 +47,10 @@ public class IngredientController implements IngredientApi {
     @Override
     public ResponseEntity<IngredientResponseDto> getIngredient(String ingredientName) {
         return ResponseEntity.ok(ingredientService.findIngredientByName(ingredientName));
+    }
+
+    @Override
+    public ResponseEntity<IngredientResponseDto> getIngredientById(UUID id) {
+        return ResponseEntity.ok(ingredientService.findIngredientById(id));
     }
 }

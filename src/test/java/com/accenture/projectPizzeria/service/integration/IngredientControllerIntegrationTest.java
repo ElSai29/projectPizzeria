@@ -78,4 +78,15 @@ public class IngredientControllerIntegrationTest {
 
     }
 
+    @Test
+    @DisplayName("Test to get an ingredient by its id from the H2 database")
+    void testGetIngredientByIdSuccess() throws Exception {
+
+        UUID idTomato = UUID.randomUUID();
+        mockMvc.perform(MockMvcRequestBuilders.get(API_INGREDIENTS_ENDPOINT + "/findById/{id}",idTomato)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
 }

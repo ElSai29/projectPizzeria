@@ -19,6 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestRestTemplate
@@ -101,6 +102,29 @@ class IngredientControllerEndToEndTest {
             Assertions.assertEquals(HttpStatus.OK, responseIngredients.getStatusCode());
             Assertions.assertNotNull(responseIngredients.getBody());
             Assertions.assertEquals("Tomato", responseIngredients.getBody().ingredientName());
+        });
+
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Test the find by id through Get endpoint")
+    @Sql("/scripts/ingredients_injection.sql")
+    void testGetIngredientByIdSuccess() {
+
+        UUID id = UUID.fromString("996e267f-8512-4089-b539-e75729d984b0");
+
+        String url = UriComponentsBuilder
+                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS + "/findById/{id}")
+                .buildAndExpand(id)
+                .toUriString();
+
+        ResponseEntity<IngredientResponseDto> responseIngredients = restTemplate.exchange(url, HttpMethod.GET, null, IngredientResponseDto.class);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(HttpStatus.OK, responseIngredients.getStatusCode());
+            Assertions.assertNotNull(responseIngredients.getBody());
+            Assertions.assertEquals("996e267f-8512-4089-b539-e75729d984b0", responseIngredients.getBody().id().toString());
         });
 
     }

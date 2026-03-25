@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -50,6 +51,17 @@ public class IngredientServiceImpl implements IngredientService {
         Ingredient ingredient = null;
         try {
             ingredient = ingredientDao.findByIngredientName(name);
+        } catch (EntityNotFoundException _) {
+            throw new EntityNotFoundException(messages.getMessage("ingredient.not.found"));
+        }
+        return ingredientMapper.toIngredientResponseDto(ingredient);
+    }
+
+    @Override
+    public IngredientResponseDto findIngredientById(UUID id) {
+        Ingredient ingredient = null;
+        try {
+            ingredient = ingredientDao.getReferenceById(id);
         } catch (EntityNotFoundException _) {
             throw new EntityNotFoundException(messages.getMessage("ingredient.not.found"));
         }
