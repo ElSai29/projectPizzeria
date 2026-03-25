@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tools.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 
 @WebMvcTest(controllers = CustomerController.class)
@@ -46,7 +47,7 @@ class CustomerControllerIntegrationTest {
         boolean isVip = false;
         CustomerRequestDto jsonBody = new CustomerRequestDto(name,email);
 
-        CustomerResponseDto responseDto = new CustomerResponseDto(UUID.randomUUID(), name, email, isVip);
+        CustomerResponseDto responseDto = new CustomerResponseDto(UUID.randomUUID(), name, email, isVip, List.of());
 
         Mockito.when(customerService.addCustomer(Mockito.any(CustomerRequestDto.class))).thenReturn(responseDto);
 

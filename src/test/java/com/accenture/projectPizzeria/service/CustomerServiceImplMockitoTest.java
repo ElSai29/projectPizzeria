@@ -16,6 +16,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.support.MessageSourceAccessor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
@@ -30,7 +32,7 @@ class CustomerServiceImplMockitoTest {
     @Mock
     private CustomerMapper customerMapper;
 
-    @Mock
+
     private CustomerService service;
 
     @Mock
@@ -47,22 +49,22 @@ class CustomerServiceImplMockitoTest {
 
     @Test
     @DisplayName("Test when customer object is well persisted from valid input")
-    void addCustomerValidInputOk(){
-    CustomerService spy = Mockito.spy(service);
-    String name = "jean";
-    String email = "jean@gmail.com";
-    boolean isVip = false;
+    void addCustomerValidInputOk() {
+        CustomerService spy = Mockito.spy(service);
+        String name = "jean";
+        String email = "jean@gmail.com";
+        boolean isVip = false;
 
-    CustomerRequestDto customerRequestDto = new CustomerRequestDto(name,email);
-    CustomerResponseDto returnedResponseDto = new CustomerResponseDto(UUID.randomUUID(), name, email, isVip);
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto(name,email);
+        CustomerResponseDto returnedResponseDto = new CustomerResponseDto(UUID.randomUUID(), name, email, isVip, List.of());
 
-    Customer customerEntity = new Customer(name, email, isVip);
+        Customer customerEntity = new Customer(name, email, isVip);
 
-    Mockito.when(customerMapper.toCustomer(Mockito.any(CustomerRequestDto.class))).thenReturn(customerEntity);
-    Mockito.when(customerDao.save(Mockito.any(Customer.class))).thenReturn(customerEntity);
-    Mockito.when(customerMapper.toCustomerResponseDto(Mockito.any(Customer.class))).thenReturn(returnedResponseDto);
+        Mockito.when(customerMapper.toCustomer(Mockito.any(CustomerRequestDto.class))).thenReturn(customerEntity);
+        Mockito.when(customerDao.save(Mockito.any(Customer.class))).thenReturn(customerEntity);
+        Mockito.when(customerMapper.toCustomerResponseDto(Mockito.any(Customer.class))).thenReturn(returnedResponseDto);
 
-    CustomerResponseDto returnedValue = spy.addCustomer(customerRequestDto);
+        CustomerResponseDto returnedValue = spy.addCustomer(customerRequestDto);
 
         Assertions.assertAll(()->
                 Assertions.assertNotNull(returnedValue, "DtoResponse should not be null"),
@@ -73,5 +75,36 @@ class CustomerServiceImplMockitoTest {
                 () -> Assertions.assertEquals(email, returnedValue.email(), "Name should be the same as the expected"));
         Mockito.verify(spy, Mockito.times(1)).verify(Mockito.any(CustomerRequestDto.class));
 }
+
+    @Test
+    @DisplayName("Test the method findAll(), must return correct output")
+    void getAllValidTest() {
+        CustomerService spy = Mockito.spy(service);
+
+        UUID id = UUID.randomUUID();
+        String name = "jean";
+        String email = "jean@gmail.com";
+        boolean isVip = false;
+
+        CustomerResponseDto responseDto = new CustomerResponseDto(id, name, email, isVip, List.of());
+        Customer customerEntityJean = new Customer(name, email, isVip);
+
+        List<Customer> listCustomer =  new ArrayList<>();
+        listCustomer.add(customerEntityJean);
+
+        Mockito.when(customerDao.findAll()).thenReturn(listCustomer);
+        Mockito.when(customerMapper.toCustomerResponseDto(customerEntityJean)).thenReturn(responseDto);
+
+        List<CustomerResponseDto> returnedValue = spy.getAllCustomers();
+
+        Assertions.assertAll(() ->
+                Assertions.assertNotNull(returnedValue, "DtoResponse should not be null"),
+                () -> Assertions.assertNotNull(returnedValue.getFirst().id(), "Id should not be null"),
+                () -> Assertions.assertNotNull(name,returnedValue.getFirst().name()),
+                () -> Assertions.assertNotNull(email, returnedValue.getFirst().email()),
+                () -> Assertions.assertEquals(name,returnedValue.getFirst().name(), "Name should be the same as the expected"),
+                () -> Assertions.assertEquals(email, returnedValue.getFirst().email(), "Email should be the same as the expected"));
+    }
+
 
 }

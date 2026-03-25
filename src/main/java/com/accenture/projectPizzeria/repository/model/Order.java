@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "ORDER")
+@Table(name = "ORDERS")
 public class Order {
 
 

@@ -12,6 +12,8 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @Transactional
@@ -34,5 +36,14 @@ public class CustomerServiceImpl implements CustomerService {
     public void verify(CustomerRequestDto requestDto) {
         if (requestDto == null)
             throw new CustomerException(messages.getMessage("customer.null"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CustomerResponseDto> getAllCustomers() {
+        List<Customer> customers = customerDao.findAll();
+        return customers.stream()
+                .map(customerMapper::toCustomerResponseDto)
+                .toList();
     }
 }
