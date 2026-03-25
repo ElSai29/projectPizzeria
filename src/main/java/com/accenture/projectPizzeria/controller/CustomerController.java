@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -30,5 +31,10 @@ public class CustomerController implements CustomerApi {
                 .buildAndExpand(reponseDto.id())
                 .toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @Override
+    public ResponseEntity<List<CustomerResponseDto>> getAllDistricts() {
+        return ResponseEntity.ok(customerService.getAllCustomers());
     }
 }

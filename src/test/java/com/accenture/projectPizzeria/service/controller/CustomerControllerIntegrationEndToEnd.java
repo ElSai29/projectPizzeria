@@ -9,9 +9,13 @@ import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
@@ -19,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CustomerControllerIntegrationEndToEnd {
 
     private static final String API_CUSTOMER_ENDPOINT = "/customers";
@@ -33,7 +38,8 @@ class CustomerControllerIntegrationEndToEnd {
     CustomerServiceImpl customerService;
 
     @Test
-    @DisplayName("Creates a Customer throught Post endpoint")
+    @Order(1)
+    @DisplayName("Creates a Customer through Post endpoint")
     void testPostCustomerSuccess(){
 
         String name = "Edouard";
@@ -51,6 +57,22 @@ class CustomerControllerIntegrationEndToEnd {
             Assertions.assertNotNull(customerResponseDto.id(), "Customer return must not have a null UUID");
             Assertions.assertEquals(name,customerResponseDto.name(), "Customer name must match the request name");
             Assertions.assertEquals(email,customerResponseDto.email(), "Customer email must match the request email");
+        });
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Find all the customers through Get endpoint")
+    void testGetAllCustomerSuccess(){
+        ResponseEntity<List<CustomerResponseDto>> response = restTemplate.exchange("http://localhost:" + port + API_CUSTOMER_ENDPOINT, HttpMethod.GET, null, new ParameterizedTypeReference<List<CustomerResponseDto>>() {
+        });
+        List<CustomerResponseDto> customers = response.getBody();
+        System.err.println("response body: " + response.getBody());
+        Assertions.assertAll(()-> {
+            Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+            Assertions.assertNotNull(response.getBody());
+            Assertions.assertEquals("Edouard", customers.getFirst().name());
+            Assertions.assertEquals("edouard@gmail.com", customers.getFirst().email());
         });
     }
 }
