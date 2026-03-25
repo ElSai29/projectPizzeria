@@ -169,4 +169,58 @@ public class IngredientServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("Test the methode findById() from service, must return the correct output")
+    void findByIdSuccess() {
+
+        IngredientService spy = Mockito.spy(ingredientService);
+
+        UUID idTomato = UUID.randomUUID();
+        String ingredientName = "Tomato";
+        int stockTomato = 100;
+
+        Ingredient originalIngredient = new Ingredient(ingredientName, stockTomato);
+        originalIngredient.setId(idTomato);
+        IngredientResponseDto expectedResponse = new IngredientResponseDto(idTomato, ingredientName, stockTomato);
+
+        Mockito.when(ingredientDao.getReferenceById((Mockito.any(UUID.class)))).thenReturn(originalIngredient);
+        Mockito.when(ingredientMapper.toIngredientResponseDto(Mockito.any(Ingredient.class))).thenReturn(expectedResponse);
+
+        IngredientResponseDto returnedResponse = spy.findIngredientById(idTomato);
+
+        Assertions.assertAll(()-> Assertions.assertNotNull(returnedResponse, "DtoResponse should not be null."),
+                () -> Assertions.assertNotNull(returnedResponse.id(), "Id should not be null."),
+                () -> Assertions.assertNotNull(returnedResponse.ingredientName(), "Ingredient name should not be null."),
+                () -> Assertions.assertNotNull(returnedResponse.stock(), "Ingredient stock should not be null."),
+                () -> Assertions.assertEquals(idTomato, returnedResponse.id(), "DtoResponse id should match the expected."),
+                () -> Assertions.assertEquals(ingredientName, returnedResponse.ingredientName(), "DtoResponse name should match the expected."),
+                () -> Assertions.assertEquals(stockTomato, returnedResponse.stock(), "DtoResponse stock should match the expected."));
+
+    }
+
+    @Test
+    @DisplayName("Test the method findById() from service, must throw EntityNotFoundException with invalid input")
+    void findByIdInvalidTestThrown() {
+
+        Mockito.when(ingredientDao.getReferenceById((Mockito.any(UUID.class)))).thenThrow(EntityNotFoundException.class);
+        UUID idTomato = UUID.randomUUID();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> ingredientService.findIngredientById(idTomato));
+
+    }
+
+    @Test
+    @DisplayName("Test the method findById from service, must catch EntityNotFoundException with message in the Exception object")
+    void findByIdInvalidTestCatch() {
+
+        Mockito.when(ingredientDao.getReferenceById((Mockito.any(UUID.class)))).thenThrow(EntityNotFoundException.class);
+        UUID idTomato = UUID.randomUUID();
+        try{
+            ingredientService.findIngredientById(idTomato);
+        }
+        catch (EntityNotFoundException e){
+            Assertions.assertNotNull(e);
+        }
+
+    }
+
 }

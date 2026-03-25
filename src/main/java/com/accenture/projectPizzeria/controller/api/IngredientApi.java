@@ -39,4 +39,11 @@ public interface IngredientApi {
     @GetMapping("/{name}")
     ResponseEntity<IngredientResponseDto> getIngredient(@Parameter(description = "Ingredient name not found", required = true) @PathVariable("name") String ingredientName);
 
+    @Operation(summary = "Get an ingredient by its id")
+    @ApiResponse(responseCode = "200", description = "Ingredient found")
+    @ApiResponse(responseCode = "404", description = "Ingredient not found",
+            content = @Content(schema = @Schema(implementation = ErrorDto.class)))
+    @GetMapping("/findById/{id}")
+    ResponseEntity<IngredientResponseDto> getIngredientById(@Parameter(description = "Ingredient id not found", required = true) @PathVariable("id") UUID id);
+
 }
