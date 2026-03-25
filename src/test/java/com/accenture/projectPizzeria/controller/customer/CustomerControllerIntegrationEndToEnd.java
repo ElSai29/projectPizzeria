@@ -1,4 +1,4 @@
-package com.accenture.projectPizzeria.service.controller;
+package com.accenture.projectPizzeria.controller.customer;
 
 import com.accenture.projectPizzeria.service.CustomerServiceImpl;
 import com.accenture.projectPizzeria.service.dto.CustomerRequestDto;
@@ -75,4 +75,19 @@ class CustomerControllerIntegrationEndToEnd {
             Assertions.assertEquals("edouard@gmail.com", customers.getFirst().email());
         });
     }
+
+    @Test
+    @Order(3)
+    @DisplayName("Find the customer by his name through Get endpoints")
+    void testGetCustomerByNameSuccess(){
+        String name = "Edouard";
+
+        ResponseEntity<CustomerResponseDto> response = restTemplate.exchange("http://localhost:" + port + API_CUSTOMER_ENDPOINT, HttpMethod.GET, null, CustomerResponseDto.class);
+        Assertions.assertAll(()-> {
+            Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+            Assertions.assertNotNull(response.getBody());
+            Assertions.assertEquals("Edouard", response.getBody().name());
+        });
+    }
+
 }

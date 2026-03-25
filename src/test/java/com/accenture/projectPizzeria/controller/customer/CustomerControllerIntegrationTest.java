@@ -1,4 +1,4 @@
-package com.accenture.projectPizzeria.service.controller;
+package com.accenture.projectPizzeria.controller.customer;
 
 import com.accenture.projectPizzeria.controller.CustomerController;
 import com.accenture.projectPizzeria.mapper.CustomerMapper;
@@ -56,5 +56,13 @@ class CustomerControllerIntegrationTest {
                 .characterEncoding(StandardCharsets.UTF_8)
                 .content(objectMapper.writeValueAsString(jsonBody)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    @DisplayName("Test get all customers with success")
+    void findAllCustomersSuccess() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get(API_CUSTOMERS_ENDPOINT))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

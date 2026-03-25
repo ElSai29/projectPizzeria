@@ -1,4 +1,4 @@
-package com.accenture.projectPizzeria.service.integration;
+package com.accenture.projectPizzeria.controller.ingredient;
 
 import com.accenture.projectPizzeria.controller.impl.IngredientController;
 import com.accenture.projectPizzeria.mapper.IngredientMapper;
