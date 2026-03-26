@@ -11,6 +11,11 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service handling bsuiness logic related to pizzas.
+ * This service is responsible for managing ingredients, including creation operation.
+ */
+
 @Service
 @AllArgsConstructor
 @Transactional
@@ -22,7 +27,11 @@ public class PizzaServiceImpl implements PizzaService{
     private final IngredientService ingredientService;
     private final MessageSourceAccessor messages;
 
-
+    /**
+     * Creates a new pizza and persists it into the database.
+     * @param pizzaRequestDto request containing the ingredient to persist.
+     * @return the response dto containing all the pizza details, including its ID.
+     */
     @Override
     public PizzaResponseDto addPizza(PizzaRequestDto pizzaRequestDto) {
 
@@ -32,6 +41,11 @@ public class PizzaServiceImpl implements PizzaService{
 
     }
 
+    /**
+     * Verifies that the pizza request dto is not null so that the adding of a pizza can be performed
+     * @param pizzaRequestDto the pizza request dto used to add a pizza in the database.
+     * @throws PizzaException if the request dto is null, with a personalized message.
+     */
     @Override
     public void verifyPizza(PizzaRequestDto pizzaRequestDto) {
         if(pizzaRequestDto == null){
