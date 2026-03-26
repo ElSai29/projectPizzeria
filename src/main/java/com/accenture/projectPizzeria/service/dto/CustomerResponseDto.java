@@ -2,6 +2,7 @@ package com.accenture.projectPizzeria.service.dto;
 
 
 
+import java.util.List;
 import java.util.UUID;
 
 public record CustomerResponseDto(
@@ -12,7 +13,9 @@ public record CustomerResponseDto(
 
     String email,
 
-    boolean isVip
+    Boolean isVip,
+
+        List<OrderResponseDto> previousOrder
 ) {
 
 }

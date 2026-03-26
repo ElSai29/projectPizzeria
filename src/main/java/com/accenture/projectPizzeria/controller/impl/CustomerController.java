@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,9 +22,13 @@ public class CustomerController implements CustomerApi {
 
     CustomerService customerService;
 
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
     @Override
-    public ResponseEntity<Void> addCustomer(@Valid CustomerRequestDto requestDto) {
-        log.info("Accessing endpoint POST /customers/{id}");
+    public ResponseEntity<Void> addCustomer(@Valid @RequestBody CustomerRequestDto requestDto) {
+        log.info("Accessing endpoint POST /{id}");
         CustomerResponseDto reponseDto = customerService.addCustomer(requestDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -30,5 +36,17 @@ public class CustomerController implements CustomerApi {
                 .buildAndExpand(reponseDto.id())
                 .toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @Override
+    public ResponseEntity<List<CustomerResponseDto>> getAllCustomers() {
+        log.info("Accessing endpoint GET /allCustomers");
+        return ResponseEntity.ok(customerService.getAllCustomers());
+    }
+
+    @Override
+    public ResponseEntity<CustomerResponseDto> getCustomer(@PathVariable String name) {
+        log.info("Accessing endpoint GET /{name}");
+        return ResponseEntity.ok(customerService.findByNameCustomer(name));
     }
 }

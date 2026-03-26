@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tools.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 
 @WebMvcTest(controllers = CustomerController.class)
@@ -46,7 +47,7 @@ class CustomerControllerIntegrationTest {
         boolean isVip = false;
         CustomerRequestDto jsonBody = new CustomerRequestDto(name,email);
 
-        CustomerResponseDto responseDto = new CustomerResponseDto(UUID.randomUUID(), name, email, isVip);
+        CustomerResponseDto responseDto = new CustomerResponseDto(UUID.randomUUID(), name, email, isVip, List.of());
 
         Mockito.when(customerService.addCustomer(Mockito.any(CustomerRequestDto.class))).thenReturn(responseDto);
 
@@ -55,5 +56,23 @@ class CustomerControllerIntegrationTest {
                 .characterEncoding(StandardCharsets.UTF_8)
                 .content(objectMapper.writeValueAsString(jsonBody)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    @DisplayName("Test get all customers with success")
+    void findAllCustomersSuccess() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get(API_CUSTOMERS_ENDPOINT))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DisplayName("Test to get a customer by his name")
+    void findCustomerByNameSuccess() throws Exception {
+
+        String name = "eric";
+        mockMvc.perform(MockMvcRequestBuilders.get(API_CUSTOMERS_ENDPOINT + "/{name}", name)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

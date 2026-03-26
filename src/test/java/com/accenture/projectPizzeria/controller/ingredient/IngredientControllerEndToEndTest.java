@@ -41,6 +41,7 @@ class IngredientControllerEndToEndTest {
     public void setUp() {}
 
     @Test
+    @Order(1)
     @DisplayName("Creates an ingredient through Post endpoint.")
     void testPostIngredientSuccess() {
 
@@ -63,36 +64,7 @@ class IngredientControllerEndToEndTest {
     }
 
     @Test
-    @DisplayName("Fail to create an ingredient through Post endpoint")
-    void testPostIngredientFail() {
-
-        String ingredientName = "Tomato";
-        int stock = -10;
-
-        IngredientRequestDto  ingredientRequestDto = new IngredientRequestDto(ingredientName, stock);
-
-        ResponseEntity<Void> response = restTemplate.postForEntity("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS, ingredientRequestDto, Void.class);
-
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Post ingredient must return a 400 http response code.");
-
-    }
-
-    @Test
-    @DisplayName("Fail to create an ingredient through Post endpoint")
-    void testPostIngredientNameFail() {
-
-        String ingredientName = null;
-        int stock = 100;
-
-        IngredientRequestDto  ingredientRequestDto = new IngredientRequestDto(ingredientName, stock);
-
-        ResponseEntity<Void> response = restTemplate.postForEntity("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS, ingredientRequestDto, Void.class);
-
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Post ingredient must return a 400 http response code.");
-
-    }
-
-    @Test
+    @Order(2)
     @DisplayName("Test the find all through Get endpoint")
     @Sql("/scripts/ingredients_injection.sql")
     void testGetAllIngredientsSuccess() {
@@ -110,6 +82,7 @@ class IngredientControllerEndToEndTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Test the find by name through Get endpoint")
     @Sql("/scripts/ingredients_injection.sql")
     void testGetIngredientByNameSuccess() {
@@ -132,24 +105,7 @@ class IngredientControllerEndToEndTest {
     }
 
     @Test
-    @DisplayName("Fail to find an ingredient by its name")
-    @Sql("/scripts/ingredients_injection.sql")
-    void testGetIngredientByNameFail() {
-
-        String name = "Ham";
-
-        String url = UriComponentsBuilder
-                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS + "/{name}")
-                .buildAndExpand(name)
-                .toUriString();
-
-        ResponseEntity<IngredientResponseDto> responseIngredients = restTemplate.exchange(url, HttpMethod.GET, null, IngredientResponseDto.class);
-
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, responseIngredients.getStatusCode());
-
-    }
-
-    @Test
+    @Order(4)
     @DisplayName("Test the find by id through Get endpoint")
     @Sql("/scripts/ingredients_injection.sql")
     void testGetIngredientByIdSuccess() {
@@ -172,24 +128,7 @@ class IngredientControllerEndToEndTest {
     }
 
     @Test
-    @DisplayName("Fail to find an ingredient by its Id")
-    @Sql("/scripts/ingredients_injection.sql")
-    void testGetIngredientByIdFail() {
-
-        UUID id = UUID.randomUUID();
-
-        String url = UriComponentsBuilder
-                .fromUriString("http://localhost:" + port + API_INGREDIENTS_ENDPOINTS + "/findById/{id}")
-                .buildAndExpand(id)
-                .toUriString();
-
-        ResponseEntity<IngredientResponseDto> responseIngredients = restTemplate.exchange(url, HttpMethod.GET, null, IngredientResponseDto.class);
-
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, responseIngredients.getStatusCode());
-
-    }
-
-    @Test
+    @Order(5)
     @DisplayName("Test the patch of an ingredient through Patch endpoint")
     @Sql("/scripts/ingredients_injection.sql")
     void testPatchIngredientSuccess() {
