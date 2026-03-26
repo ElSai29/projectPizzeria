@@ -1,16 +1,20 @@
 package com.accenture.projectPizzeria.repository.model;
 
 import jakarta.persistence.*;
-import jakarta.xml.bind.PrintConversionEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JoinFormula;
-import org.hibernate.engine.jdbc.Size;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+/**
+ * Entity representing a pizza.
+ * A pizza corresponds to a product that can be ordered by a client.
+ * It is defined by its name, a list of ingredients and a map containing the sizes and the prices.
+ * It is persisted in the PIZZAS table and calls for INGREDIENTS table.
+ */
 
 @Entity
 @Data
