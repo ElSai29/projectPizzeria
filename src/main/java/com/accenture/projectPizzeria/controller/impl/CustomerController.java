@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -21,10 +22,6 @@ import java.net.URI;
 public class CustomerController implements CustomerApi {
 
     CustomerService customerService;
-
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
 
     @Override
     public ResponseEntity<Void> addCustomer(@Valid @RequestBody CustomerRequestDto requestDto) {
