@@ -12,4 +12,6 @@ public interface CustomerService {
     void verify(CustomerRequestDto requestDto);
 
     List<CustomerResponseDto> getAllCustomers();
+
+    CustomerResponseDto findByNameCustomer(String name);
 }

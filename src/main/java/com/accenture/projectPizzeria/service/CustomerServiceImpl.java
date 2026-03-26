@@ -6,6 +6,7 @@ import com.accenture.projectPizzeria.repository.CustomerDao;
 import com.accenture.projectPizzeria.repository.model.Customer;
 import com.accenture.projectPizzeria.service.dto.CustomerRequestDto;
 import com.accenture.projectPizzeria.service.dto.CustomerResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -33,17 +34,28 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void verify(CustomerRequestDto requestDto) {
-        if (requestDto == null)
-            throw new CustomerException(messages.getMessage("customer.null"));
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public List<CustomerResponseDto> getAllCustomers() {
         List<Customer> customers = customerDao.findAll();
         return customers.stream()
                 .map(customerMapper::toCustomerResponseDto)
                 .toList();
+    }
+
+    @Override
+    public CustomerResponseDto findByNameCustomer(String name) {
+       Customer customer = null;
+       try {
+           customer = customerDao.findByName(name);
+       }catch (EntityNotFoundException _){
+           throw new EntityNotFoundException(messages.getMessage("Customer.name.notfound", name));
+       }
+       return customerMapper.toCustomerResponseDto(customer);
+    }
+
+    @Override
+    public void verify(CustomerRequestDto requestDto) {
+        if (requestDto == null)
+            throw new CustomerException(messages.getMessage("customer.null"));
     }
 }

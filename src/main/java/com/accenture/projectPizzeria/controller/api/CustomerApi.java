@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,5 +29,11 @@ public interface CustomerApi {
     @Operation(summary = "Read all districts")
     @ApiResponse(responseCode = "200", description = "List all Customers")
     @GetMapping
-    ResponseEntity<List<CustomerResponseDto>> getAllDistricts();
+    ResponseEntity<List<CustomerResponseDto>> getAllCustomers();
+
+    @Operation(summary = "Find a customer by his name")
+    @ApiResponse(responseCode = "200", description = "show a customer")
+    @GetMapping("/{name}")
+    ResponseEntity<CustomerResponseDto> getCustomer(@PathVariable String name);
+
 }

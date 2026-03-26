@@ -89,6 +89,8 @@ class CustomerServiceImplMockitoTest {
         CustomerResponseDto responseDto = new CustomerResponseDto(id, name, email, isVip, List.of());
         Customer customerEntityJean = new Customer(name, email, isVip);
 
+
+
         List<Customer> listCustomer =  new ArrayList<>();
         listCustomer.add(customerEntityJean);
 
@@ -106,5 +108,30 @@ class CustomerServiceImplMockitoTest {
                 () -> Assertions.assertEquals(email, returnedValue.getFirst().email(), "Email should be the same as the expected"));
     }
 
+    @Test
+    @DisplayName("Test the method findByName() from service, must return correct output")
+    void findByNameValidInputOk() {
+        CustomerService spy = Mockito.spy(service);
+        UUID id = UUID.randomUUID();
+        String name = "jean";
+        String email = "jean@gmail.com";
+        boolean isVip = false;
+
+        Customer originalCustomer = new Customer(name, email, isVip);
+        CustomerResponseDto responseDto = new CustomerResponseDto(id, name, email, isVip, List.of());
+
+
+        Mockito.when(customerDao.findByName((Mockito.any(String.class)))).thenReturn(originalCustomer);
+        Mockito.when(customerMapper.toCustomerResponseDto(originalCustomer)).thenReturn(responseDto);
+
+        CustomerResponseDto returnedValue = spy.findByNameCustomer(name);
+
+        Assertions.assertAll(() -> Assertions.assertNotNull(returnedValue, "DtoResponse should not be null"),
+                () -> Assertions.assertNotNull(returnedValue.id(), "Id should not be null"),
+                () -> Assertions.assertNotNull(name, returnedValue.name()),
+                () -> Assertions.assertNotNull(email, returnedValue.email()),
+                () -> Assertions.assertEquals(name, returnedValue.name(), "Name should be the same as the expected"),
+                () -> Assertions.assertEquals(email, returnedValue.email(), "Email should be the same as the expected"));
+    }
 
 }
