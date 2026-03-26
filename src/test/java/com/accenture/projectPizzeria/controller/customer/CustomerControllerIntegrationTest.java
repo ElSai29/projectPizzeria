@@ -1,6 +1,6 @@
 package com.accenture.projectPizzeria.controller.customer;
 
-import com.accenture.projectPizzeria.controller.CustomerController;
+import com.accenture.projectPizzeria.controller.impl.CustomerController;
 import com.accenture.projectPizzeria.mapper.CustomerMapper;
 import com.accenture.projectPizzeria.service.CustomerServiceImpl;
 import com.accenture.projectPizzeria.service.dto.CustomerRequestDto;
@@ -63,6 +63,16 @@ class CustomerControllerIntegrationTest {
     void findAllCustomersSuccess() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get(API_CUSTOMERS_ENDPOINT))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DisplayName("Test to get a customer by his name")
+    void findCustomerByNameSuccess() throws Exception {
+
+        String name = "eric";
+        mockMvc.perform(MockMvcRequestBuilders.get(API_CUSTOMERS_ENDPOINT + "/{name}", name)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

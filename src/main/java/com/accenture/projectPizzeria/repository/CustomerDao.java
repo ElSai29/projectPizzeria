@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface CustomerDao extends JpaRepository<Customer, UUID> {
 
-   Customer findByNameCustomer(String name);
+   Customer findByName(String name);
 }

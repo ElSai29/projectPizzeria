@@ -13,7 +13,7 @@ public record CustomerResponseDto(
 
     String email,
 
-    boolean isVip,
+    Boolean isVip,
 
         List<OrderResponseDto> previousOrder
 ) {

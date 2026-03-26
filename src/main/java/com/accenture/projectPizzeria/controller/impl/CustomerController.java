@@ -1,4 +1,4 @@
-package com.accenture.projectPizzeria.controller;
+package com.accenture.projectPizzeria.controller.impl;
 
 import com.accenture.projectPizzeria.controller.api.CustomerApi;
 import com.accenture.projectPizzeria.service.CustomerService;
@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -16,14 +18,17 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
 public class CustomerController implements CustomerApi {
 
     CustomerService customerService;
 
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
     @Override
-    public ResponseEntity<Void> addCustomer(@Valid CustomerRequestDto requestDto) {
-        log.info("Accessing endpoint POST /customers/{id}");
+    public ResponseEntity<Void> addCustomer(@Valid @RequestBody CustomerRequestDto requestDto) {
+        log.info("Accessing endpoint POST /{id}");
         CustomerResponseDto reponseDto = customerService.addCustomer(requestDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -34,7 +39,14 @@ public class CustomerController implements CustomerApi {
     }
 
     @Override
-    public ResponseEntity<List<CustomerResponseDto>> getAllDistricts() {
+    public ResponseEntity<List<CustomerResponseDto>> getAllCustomers() {
+        log.info("Accessing endpoint GET /allCustomers");
         return ResponseEntity.ok(customerService.getAllCustomers());
+    }
+
+    @Override
+    public ResponseEntity<CustomerResponseDto> getCustomer(@PathVariable String name) {
+        log.info("Accessing endpoint GET /{name}");
+        return ResponseEntity.ok(customerService.findByNameCustomer(name));
     }
 }

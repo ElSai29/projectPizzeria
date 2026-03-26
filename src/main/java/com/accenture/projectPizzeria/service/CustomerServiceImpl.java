@@ -46,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponseDto findByNameCustomer(String name) {
        Customer customer = null;
        try {
-           customer = customerDao.findByNameCustomer(name);
+           customer = customerDao.findByName(name);
        }catch (EntityNotFoundException _){
            throw new EntityNotFoundException(messages.getMessage("Customer.name.notfound", name));
        }

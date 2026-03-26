@@ -121,7 +121,7 @@ class CustomerServiceImplMockitoTest {
         CustomerResponseDto responseDto = new CustomerResponseDto(id, name, email, isVip, List.of());
 
 
-        Mockito.when(customerDao.findByNameCustomer((Mockito.any(String.class)))).thenReturn(originalCustomer);
+        Mockito.when(customerDao.findByName((Mockito.any(String.class)))).thenReturn(originalCustomer);
         Mockito.when(customerMapper.toCustomerResponseDto(originalCustomer)).thenReturn(responseDto);
 
         CustomerResponseDto returnedValue = spy.findByNameCustomer(name);
