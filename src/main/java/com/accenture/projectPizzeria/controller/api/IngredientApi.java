@@ -21,7 +21,7 @@ import java.util.UUID;
 public interface IngredientApi {
 
     @Operation(summary = "Add a new ingredient")
-    @ApiResponse(responseCode = "200", description = "Ingredient found")
+    @ApiResponse(responseCode = "201", description = "Ingredient created")
     @ApiResponse(responseCode = "400", description = "Invalid ingredient",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     @PostMapping
