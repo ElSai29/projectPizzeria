@@ -134,4 +134,24 @@ class CustomerServiceImplMockitoTest {
                 () -> Assertions.assertEquals(email, returnedValue.email(), "Email should be the same as the expected"));
     }
 
+
+//    @Test
+//    @DisplayName("Test when Customer is well modified")
+//    void patchValidInputOk() {
+//        CustomerService spy = Mockito.spy(service);
+//        UUID id = UUID.randomUUID();
+//        String name = "jean";
+//        String email = "jean@gmail.com";
+//        boolean isVip = false;
+//
+//        Customer originalCustomer = new Customer(name, email, isVip);
+//        CustomerResponseDto responseDto = new CustomerResponseDto(id, name, email, isVip, List.of());
+//
+//        Mockito.when(customerMapper.toCustomer(Mockito.any(CustomerRequestDto.class))).thenReturn(originalCustomer);
+//        Mockito.when(customerDao.save(Mockito.any(Customer.class))).thenReturn(originalCustomer);
+//        Mockito.when(customerMapper.toCustomerResponseDto(Mockito.any(Customer.class))).thenReturn(responseDto);
+//
+//
+//        CustomerResponseDto returnedValue = spy.patchCustomer
+//    }
 }
