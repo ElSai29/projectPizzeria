@@ -11,7 +11,7 @@ public record PizzaRequestDto(
 
         @NotBlank(message = "pizza.name.null") String name,
         @NotNull(message = "pizza.ingredients.null") List<String> ingredientsName,
-        @NotBlank(message = "size.price.null") HashMap<PizzaSize, Double> prices
+        @NotNull(message = "size.price.null") HashMap<PizzaSize, Double> prices
 
         ) {
 }

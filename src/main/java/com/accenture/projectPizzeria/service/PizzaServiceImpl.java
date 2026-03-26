@@ -1,7 +1,9 @@
 package com.accenture.projectPizzeria.service;
 
+import com.accenture.projectPizzeria.exception.PizzaException;
 import com.accenture.projectPizzeria.mapper.PizzaMapper;
 import com.accenture.projectPizzeria.repository.PizzaDao;
+import com.accenture.projectPizzeria.repository.model.Pizza;
 import com.accenture.projectPizzeria.service.dto.PizzaRequestDto;
 import com.accenture.projectPizzeria.service.dto.PizzaResponseDto;
 import lombok.AllArgsConstructor;
@@ -23,11 +25,17 @@ public class PizzaServiceImpl implements PizzaService{
 
     @Override
     public PizzaResponseDto addPizza(PizzaRequestDto pizzaRequestDto) {
-        return null;
+
+        verifyPizza(pizzaRequestDto);
+        Pizza savedPizza = pizzaDao.save(pizzaMapper.toPizza(pizzaRequestDto));
+        return pizzaMapper.toPizzaResponseDto(savedPizza);
+
     }
 
     @Override
     public void verifyPizza(PizzaRequestDto pizzaRequestDto) {
-
+        if(pizzaRequestDto == null){
+            throw new PizzaException(messages.getMessage("pizza.null"));
+        }
     }
 }

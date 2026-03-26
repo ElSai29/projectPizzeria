@@ -27,7 +27,7 @@ public class IngredientController implements IngredientApi {
     @Override
     public ResponseEntity<Void> addIngredient(@Valid @RequestBody IngredientRequestDto requestDto) {
 
-        log.info("Accessing endpoint POST /ingredients/{id}");
+        log.info("Accessing endpoint POST /ingredients");
 
         IngredientResponseDto ingredientResponseDto = ingredientService.addIngredient(requestDto);
         URI location = ServletUriComponentsBuilder

@@ -30,13 +30,13 @@ public class Pizza {
     @JoinTable(name = "PizzaIngredient",
                 joinColumns = {@JoinColumn(name = "pizzaId")},
                 inverseJoinColumns = {@JoinColumn(name = "ingredientId")})
-    private List<Ingredient> ingredients;
+    private List<Ingredient> ingredientList;
 
     private HashMap<PizzaSize, Double> prices;
 
-    public Pizza(String name, List<Ingredient> ingredients, HashMap<PizzaSize, Double> prices) {
+    public Pizza(String name, List<Ingredient> ingredientList, HashMap<PizzaSize, Double> prices) {
         this.name = name;
-        this.ingredients = ingredients;
+        this.ingredientList = ingredientList;
         this.prices = prices;
     }
 }
